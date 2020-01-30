@@ -6,7 +6,10 @@
 # Misc. tools
 ###################
 - name: Install the system packages
-  include: tasks/system/install-packages.yml
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+  when: ansible_os_family == 'Debian'
   vars:
     packages:
       - git
@@ -39,7 +42,10 @@
     state: present
 
 - name: Install PHP and his components
-  include: tasks/system/install-packages.yml
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+  when: ansible_os_family == 'Debian'
   vars:
     packages:
       - php7.3
@@ -55,9 +61,12 @@
 # Apache2
 ###################
 - name: Install Apache
-  apt: name={{ item }} state=present
-  with_items:
-    - libapache2-mod-php7.3
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - libapache2-mod-php7.3
 - service:
     name: apache2
     state: stopped
@@ -69,18 +78,25 @@
 # Mysql
 ###################
 - name: Install Mysql
-  apt: name={{ item }} state=present
-  with_items:
-    - mysql-server
-    - mysql-client
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - mysql-server
+      - mysql-client
 
 ###################
 # Postfix
 ###################
 - name: Install Postfix
   apt: name={{ item }} state=present
-  with_items:
-    - postfix
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - postfix
 
 ###################
 # Varnish

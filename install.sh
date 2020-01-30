@@ -10,8 +10,13 @@ if [ -z "$1" ]; then
 fi
 
 SERVER_USER=$2
+DEFAULT_SERVER_USER="root"
 if [ -z "$2" ]; then
-    read -p "Enter the user to connect to your server : " SERVER_USER
+    read -p "Enter the user to connect to your server (default: $DEFAULT_SERVER_USER): " SERVER_USER
+fi
+
+if [ "$SSH_PORT" == "" ]; then
+    SERVER_USER=$DEFAULT_SERVER_USER
 fi
 
 DEFAULT_SSH_PORT=22
@@ -21,7 +26,7 @@ if [ -z "$3" ]; then
 fi
 
 if [ "$SSH_PORT" == "" ]; then
-    SSH_PORT=DEFAULT_SSH_PORT
+    SSH_PORT=$DEFAULT_SSH_PORT
 fi
 
 VARNISH_ENABLE=$4
@@ -49,4 +54,4 @@ echo "Install required package for using ansible and configure the server."
 ssh -p $DEFAULT_SSH_PORT "$SERVER_USER@$SERVER_IP" "apt-get update; apt-get install python -y;"
 
 echo "Launching the playbook that install all the components."
-#ansible-playbook -i inventory/webservers  install.yml --extra-vars "server_ip=$SERVER_IP server_user=$SERVER_USER varnish_port=$VARNISH_PORT apache_port=$APACHE_PORT"
+ansible-playbook -i inventory/webservers  install.yml --extra-vars "server_ip=$SERVER_IP server_user=$SERVER_USER varnish_port=$VARNISH_PORT apache_port=$APACHE_PORT"
