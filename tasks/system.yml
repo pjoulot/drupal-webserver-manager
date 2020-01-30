@@ -31,15 +31,18 @@
 # Php
 ###################
 
-- name: Add PHP repo key
-  get_url:
+- name: Add PHP repo key.
+  apt_key:
     url: https://packages.sury.org/php/apt.gpg
-    dest: /etc/apt/trusted.gpg.d/php.gpg
+    state: present
+  when: ansible_distribution == "Debian"
 
 - name: Add PHP repo to the system
   apt_repository:
-    repo: deb-src https://packages.sury.org/php/ {{ ansible_distribution_release }} main
+    repo: "deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main"
     state: present
+  register: php_ondrej_debian_repo
+  when: ansible_distribution == "Debian"
 
 - name: apt-get update
   apt:  update_cache=yes
