@@ -41,6 +41,9 @@
     repo: deb-src https://packages.sury.org/php/ {{ ansible_distribution_release }} main
     state: present
 
+- name: apt-get update
+  apt:  update_cache=yes
+
 - name: Install PHP and his components
   apt:
     pkg: "{{ packages }}"
@@ -90,7 +93,6 @@
 # Postfix
 ###################
 - name: Install Postfix
-  apt: name={{ item }} state=present
   apt:
     pkg: "{{ packages }}"
     state: present
