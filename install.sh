@@ -24,18 +24,16 @@ if [ "$SSH_PORT" == "" ]; then
     SSH_PORT=DEFAULT_SSH_PORT
 fi
 
-TOOLS=$1
-if [ -z "$1" ]; then
-    read -p "Do you want to install some tools that could help administrate your server like vim or wget? (default: yes): N / Y " TOOLS
-fi
+# Write the host in the ansible hosts.
 
-if [ "$TOOLS" == "N" ] || [ "$TOOLS" == "n" ] || [ "$TOOLS" == "no" ]; then
-  TOOLS="no"
-else
-  TOOLS="yes"
-fi
+echo "Clean in case an host with the same name has already been created before"
+sed "/$SERVER_IP/d" ./inventory/webservers/hosts > ./inventory/webservers/hosts
+echo "$SERVER_IP ansible_connection=ssh ansible_user=$SERVER_USER" >> ./inventory/webservers/hosts && echo "Your server $SERVER_IP can now be managed by ansible"
 
 echo "Starting the install of your server"
 
 echo "Install required package for using ansible and configure the server."
 ssh -p $DEFAULT_SSH_PORT "$SERVER_USER@$SERVER_IP" "apt-get update; apt-get install python -y;"
+
+echo "Launching the playbook that install all the components."
+ansible-playbook -i inventory/webservers  install.yml --extra-vars "tools=$TOOLS"

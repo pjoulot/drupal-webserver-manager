@@ -1,0 +1,108 @@
+- name: install python-apt
+  raw: apt-get update && apt-get install python-apt -y -q
+- name: apt-get update
+  apt:  update_cache=yes
+###################
+# Misc. tools
+###################
+- name: Install usefull system tools
+  apt: name={{ item }} state=present
+  with_items:
+    - git
+    - python-dev
+    - python-pip
+    - curl
+    - ca-certificates
+    - build-essential
+    - xz-utils
+    - bash-completion
+    - gcc
+    - sudo
+    - vim
+    - zip
+    - wget
+
+###################
+# Php
+###################
+- name: Install PHP and his components
+  apt: name={{ item }} state=present
+  with_items:
+    - php7.3
+    - php7.3-curl
+    - php7.3-gd
+    - php7.3-mcrypt
+    - php7.3-mysql
+    - php7.3-xdebug
+    - php7.3-mbstring
+    - php7.3-xml
+    - php7.3-json
+
+###################
+# Apache2
+###################
+- name: Install Apache
+  apt: name={{ item }} state=present
+  with_items:
+    - libapache2-mod-php7.3
+- service:
+    name: apache2
+    state: stopped
+- name: Remove default site config
+  file: path=/etc/apache2/sites-enabled/000-default.conf
+        state=absent
+
+###################
+# Mysql
+###################
+- name: Install Mysql
+  apt: name={{ item }} state=present
+  with_items:
+    - mysql-server
+    - mysql-client
+
+###################
+# Postfix
+###################
+- name: Install Postfix
+  apt: name={{ item }} state=present
+  with_items:
+    - postfix
+
+###################
+# Varnish
+###################
+- name: Install Varnish
+  apt: name=varnish state=present
+  when: varnish_port != "0"
+  ignore_errors: yes
+- service:
+    name: varnish
+    state: stopped
+  when: varnish_port != "0"
+
+###################
+# composer
+###################
+- name: download composer
+  get_url:
+    url: "https://getcomposer.org/installer"
+    dest: "/root"
+  tags: composer
+
+- name: install composer
+  shell: cat installer | php -- --install-dir=/usr/local/bin creates=/usr/local/bin/composer
+  tags: composer
+
+- name: Delete installer
+  file: path=installer
+        state=absent
+
+# Install composer globally
+- name: rename composer.phar to composer
+  shell: mv /usr/local/bin/composer.phar /usr/local/bin/composer creates=/usr/local/bin/composer
+  tags: composer
+
+- name: make composer executable
+  file: path=/usr/local/bin/composer mode=a+x state=file
+  tags: composer
