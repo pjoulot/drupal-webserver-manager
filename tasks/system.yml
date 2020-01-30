@@ -5,38 +5,51 @@
 ###################
 # Misc. tools
 ###################
-- name: Install usefull system tools
-  apt: name={{ item }} state=present
-  with_items:
-    - git
-    - python-dev
-    - python-pip
-    - curl
-    - ca-certificates
-    - build-essential
-    - xz-utils
-    - bash-completion
-    - gcc
-    - sudo
-    - vim
-    - zip
-    - wget
+- name: Install the system packages
+  include: tasks/system/install-packages.yml
+  vars:
+    packages:
+      - git
+      - python-dev
+      - python-pip
+      - curl
+      - ca-certificates
+      - build-essential
+      - xz-utils
+      - bash-completion
+      - gcc
+      - sudo
+      - vim
+      - zip
+      - wget
+      - apt-transport-https
 
 ###################
 # Php
 ###################
+
+- name: Add PHP repo key
+  get_url:
+    url: https://packages.sury.org/php/apt.gpg
+    dest: /etc/apt/trusted.gpg.d/php.gpg
+
+- name: Add PHP repo to the system
+  apt_repository:
+    repo: deb-src https://packages.sury.org/php/ {{ ansible_distribution_release }} main
+    state: present
+
 - name: Install PHP and his components
-  apt: name={{ item }} state=present
-  with_items:
-    - php7.3
-    - php7.3-curl
-    - php7.3-gd
-    - php7.3-mcrypt
-    - php7.3-mysql
-    - php7.3-xdebug
-    - php7.3-mbstring
-    - php7.3-xml
-    - php7.3-json
+  include: tasks/system/install-packages.yml
+  vars:
+    packages:
+      - php7.3
+      - php7.3-curl
+      - php7.3-gd
+      - php7.3-mysql
+      - php7.3-xdebug
+      - php7.3-mbstring
+      - php7.3-xml
+      - php7.3-json
 
 ###################
 # Apache2
