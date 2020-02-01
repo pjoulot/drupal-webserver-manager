@@ -15,3 +15,6 @@
       include: tasks/create-database.yml
   roles:
     - geerlingguy.drupal
+  pre_tasks:
+    - name: Generating config of the website
+      include: tasks/generate-website-config.yml

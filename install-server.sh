@@ -61,7 +61,7 @@ echo "Install required package for using ansible and configure the server."
 ssh -p $DEFAULT_SSH_PORT "$SERVER_USER@$SERVER_IP" "apt-get update; apt-get install python -y;"
 
 echo "Launching the playbook that install all the components."
-ansible-playbook -i inventory/webservers server.yml --extra-vars "server_ip=$SERVER_IP server_user=$SERVER_USER mysql_root_password=$MYSQL_ROOT_PASSWORD"
+ansible-playbook -i inventory/webservers server.yml --extra-vars "server_ip=$SERVER_IP server_user=$SERVER_USER mysql_root_password=$MYSQL_ROOT_PASSWORD apache_port=$APACHE_PORT"
 
 
 echo "* INFOS ABOUT THE SERVER ****************"

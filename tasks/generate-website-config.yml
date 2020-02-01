@@ -1,0 +1,4 @@
+- name: Setup apache config for the website
+  template: src=templates/conf/apache/project.conf dest=/etc/apache2/sites-available/{{ drupal_domain }}.conf
+- name: Activate vhost
+  file: src=/etc/apache2/sites-available/{{ drupal_domain }}.conf dest=/etc/apache2/sites-enabled/{{ drupal_domain }}.conf state=link

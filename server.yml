@@ -6,6 +6,7 @@
     database_name: "{{ database_name }}"
     database_user: "{{ database_user }}"
     database_password: "{{ database_password }}"
+    apache_listen_port: "{{ apache_port }}"
   roles:
     - geerlingguy.git
     - geerlingguy.apache

@@ -1,5 +1,12 @@
 # System configuration
 php_memory_limit: "512M"
+php_version: '7.3'
+php_packages_extra: ["libapache2-mod-fastcgi", "libapache2-mod-php7.3"]
+
+apache_listen_ip: "*"
+apache_listen_port_ssl: 443
+
+apache_listen_port: 80
 
 mysql_root_username: root
 mysql_root_password: root
