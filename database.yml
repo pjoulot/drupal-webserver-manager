@@ -1,0 +1,10 @@
+---
+- hosts: "{{ server_ip }}"
+  remote_user: "{{ server_user }}"
+  vars:
+    database_name: "{{ database_name }}"
+    database_user: "{{ database_user }}"
+    database_password: "{{ database_password }}"
+  tasks:
+    - name: Create database
+      include: tasks/create-database.yml

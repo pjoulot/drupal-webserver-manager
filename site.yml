@@ -1,0 +1,17 @@
+- hosts: "{{ server_ip }}"
+  remote_user: "{{ server_user }}"
+  vars_files:
+    - vars/main.yml
+  vars:
+    drupal_deploy_dir: "/var/www/{{ domain_name }}"
+    drupal_composer_install_dir: "/var/www/{{ domain_name }}"
+    drupal_core_path: "{{ drupal_composer_install_dir }}/web"
+    drupal_domain: "{{ domain_name }}"
+    database_name: "{{ drupal_db_name }}"
+    database_user: "{{ drupal_db_user }}"
+    database_password: "{{ drupal_db_password }}"
+  pre_tasks:
+    - name: Create database
+      include: tasks/create-database.yml
+  roles:
+    - geerlingguy.drupal

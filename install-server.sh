@@ -43,6 +43,13 @@ else
 fi
 
 
+MYSQL_ROOT_PASSWORD=`date +%s | sha256sum | base64 | head -c 32 ; echo`
+
+echo "Starting the install of your server"
+
+echo "Install required package for using ansible and configure the server."
+ssh -p $DEFAULT_SSH_PORT "$SERVER_USER@$SERVER_IP" "apt-get update; apt-get install python -y;"
+
 # Write the host in the ansible hosts.
 # Clean in case an host with the same name has already been created before
 sed "/$SERVER_IP/d" ./inventory/webservers/hosts > ./inventory/webservers/hosts
@@ -54,4 +61,8 @@ echo "Install required package for using ansible and configure the server."
 ssh -p $DEFAULT_SSH_PORT "$SERVER_USER@$SERVER_IP" "apt-get update; apt-get install python -y;"
 
 echo "Launching the playbook that install all the components."
-ansible-playbook -i inventory/webservers  install.yml --extra-vars "server_ip=$SERVER_IP server_user=$SERVER_USER varnish_port=$VARNISH_PORT apache_port=$APACHE_PORT"
+ansible-playbook -i inventory/webservers server.yml --extra-vars "server_ip=$SERVER_IP server_user=$SERVER_USER mysql_root_password=$MYSQL_ROOT_PASSWORD"
+
+
+echo "* INFOS ABOUT THE SERVER ****************"
+echo "Mysql Root Password: $MYSQL_ROOT_PASSWORD"

@@ -1,0 +1,11 @@
+- name: Install other system packages that will be used to manage the server.
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+  when: ansible_os_family == 'Debian'
+  vars:
+    packages:
+      - vim
+      - zip
+      - wget
+      - apt-transport-https
