@@ -7,6 +7,7 @@
     database_user: "{{ database_user }}"
     database_password: "{{ database_password }}"
     apache_listen_port: "{{ apache_port }}"
+    mysql_root_password: "{{ mysql_root_password }}"
   roles:
     - geerlingguy.git
     - geerlingguy.apache
@@ -16,6 +17,7 @@
     - geerlingguy.php-mysql
     - geerlingguy.composer
     - geerlingguy.drush
+    - geerlingguy.varnish
   post_tasks:
     - name: Post tasks
       include: tasks/post-install.yml
