@@ -17,7 +17,6 @@
     - geerlingguy.php-mysql
     - geerlingguy.composer
     - geerlingguy.drush
-    - geerlingguy.varnish
   post_tasks:
     - name: Post tasks
       include: tasks/post-install.yml
