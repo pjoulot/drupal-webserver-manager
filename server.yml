@@ -17,6 +17,11 @@
     - geerlingguy.php-mysql
     - geerlingguy.composer
     - geerlingguy.drush
+    - geerlingguy.nginx
+    - geerlingguy.certbot
   post_tasks:
+    - name: Install Varnish
+      include: tasks/varnish-configuration.yml
+      when: varnish_listen_port != "0"
     - name: Post tasks
       include: tasks/post-install.yml

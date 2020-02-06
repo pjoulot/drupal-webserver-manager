@@ -34,6 +34,7 @@
   template: src=templates/conf/varnish/default.vcl dest=/etc/varnish/default.vcl
 
 - name: Reload daemon
-  shell: systemctl daemon-reload && systemctl restart varnish.service
-  notify:
-  - restart varnish
+  shell: systemctl daemon-reload
+
+- name: Restart varnish
+  service: name=varnish state=restarted enabled=yes

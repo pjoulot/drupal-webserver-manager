@@ -57,6 +57,11 @@ sub vcl_init {
 # which backend to use.
 # also used to modify the request
 sub vcl_recv {
+  # Redirect HTTP traffic to the HTTPS one.
+  if (req.http.X-Forwarded-Proto !~ "https") {
+    return (synth(850, "Moved Permanently"));
+  }
+
   set req.backend_hint = vdir.backend(); # send all traffic to the vdir director
 
   # Normalize the header, remove the port (in case you're testing this on various TCP ports)
@@ -466,6 +471,9 @@ sub vcl_synth {
     set resp.http.Location = resp.reason;
     set resp.status = 302;
     return (deliver);
+  } elseif(resp.status == 850) {
+    set resp.http.Location = "https://" + req.http.host + req.url;
+    set resp.status = 301;
   }
 
   return (deliver);

@@ -4,7 +4,7 @@ php_version: '7.3'
 php_packages_extra: ["libapache2-mod-php7.3"]
 
 apache_listen_ip: "*"
-apache_listen_port_ssl: "443"
+apache_listen_port_ssl: "82"
 apache_listen_port: "81"
 
 varnish_listen_port: "80"
@@ -12,6 +12,13 @@ varnish_listen_port: "80"
 mysql_root_username: root
 mysql_root_password: root
 mysql_root_password_update: false
+
+nginx_remove_default_vhost: true
+
+certbot_create_if_missing: false
+certbot_create_standalone_stop_services:
+  - nginx
+  - varnish
 
 composer_path: /usr/local/bin/composer
 

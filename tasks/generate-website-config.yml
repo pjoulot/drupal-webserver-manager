@@ -10,3 +10,16 @@
 - name: Create varnish VCL
   template: src=templates/conf/varnish/default.vcl dest=/etc/default/varnish/default.vcl
   when: ansible_os_family != "Debian"
+- name: Remove default nginx config
+  file: path=/etc/nginx/sites-enabled/default
+        state=absent
+- name: Setup the nginx configuration
+  template: src=templates/conf/nginx/default dest=/etc/nginx/sites-enabled/{{ drupal_domain }}
+- name: Restart nginx
+  service: name=nginx state=restarted enabled=yes
+
+- name: Stop varnish for generate certificate
+  service: name=varnish state=stopped enabled=yes
+
+- name: Generate the SSL certificate
+  shell: sudo certbot --nginx -d www.{{ drupal_domain }} -d {{ drupal_domain }} --non-interactive

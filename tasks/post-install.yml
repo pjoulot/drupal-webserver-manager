@@ -9,6 +9,7 @@
       - zip
       - wget
       - apt-transport-https
+      - python-certbot-nginx
 - name: Enable apache modules
   shell: a2enmod rewrite expires headers
 - name: Restart apache
