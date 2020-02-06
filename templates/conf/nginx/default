@@ -2,6 +2,7 @@ server {
         listen 443 ssl;
 
         server_name www.{{ drupal_domain }};
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
         location / {
             proxy_pass http://127.0.0.1:{{ varnish_listen_port }};
@@ -15,6 +16,7 @@ server {
 
 server {
     listen 443 ssl;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
     server_name {{ drupal_domain }};
     return 301 $scheme://www.{{ drupal_domain }}$request_uri;
