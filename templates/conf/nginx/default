@@ -2,7 +2,6 @@ server {
         listen 443 ssl;
 
         server_name www.{{ drupal_domain }};
-        return 301 $scheme://www.{{ drupal_domain }}$request_uri;
 
         location / {
             proxy_pass http://127.0.0.1:{{ varnish_listen_port }};

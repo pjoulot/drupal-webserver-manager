@@ -12,5 +12,10 @@
       - python-certbot-nginx
 - name: Enable apache modules
   shell: a2enmod rewrite expires headers
+- name: Remove default ports
+  file: path=/etc/apache2/ports.conf
+        state=absent
+- name: Create the new ports.conf file
+  template: src=templates/conf/apache/ports.conf dest=/etc/apache2/ports.conf
 - name: Restart apache
   service: name=apache2 state=restarted enabled=yes

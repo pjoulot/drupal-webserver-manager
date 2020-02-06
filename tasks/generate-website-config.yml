@@ -8,13 +8,14 @@
   file: path=/etc/varnish/default.vcl
         state=absent
 - name: Create varnish VCL
-  template: src=templates/conf/varnish/default.vcl dest=/etc/default/varnish/default.vcl
-  when: ansible_os_family != "Debian"
+  template: src=templates/conf/varnish/default.vcl dest=/etc/varnish/default.vcl
 - name: Remove default nginx config
   file: path=/etc/nginx/sites-enabled/default
         state=absent
 - name: Setup the nginx configuration
-  template: src=templates/conf/nginx/default dest=/etc/nginx/sites-enabled/{{ drupal_domain }}
+  template: src=templates/conf/nginx/default dest=/etc/nginx/sites-available/{{ drupal_domain }}
+- name: Create symlink to sites enabled
+  file: src=/etc/nginx/sites-available/{{ drupal_domain }} dest=/etc/nginx/sites-enabled/{{ drupal_domain }} state=link
 - name: Restart nginx
   service: name=nginx state=restarted enabled=yes
 
@@ -22,4 +23,7 @@
   service: name=varnish state=stopped enabled=yes
 
 - name: Generate the SSL certificate
-  shell: sudo certbot --nginx -d www.{{ drupal_domain }} -d {{ drupal_domain }} --non-interactive
+  shell: sudo certbot --nginx -d {{ drupal_domain }} -d www.{{ drupal_domain }} --non-interactive --agree-tos --email philippe.joulot@laposte.net
+
+- name: Restart varnish
+  service: name=varnish state=restarted enabled=yes
